@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars API</title>
+</head><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css' integrity='sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w==' crossorigin='anonymous'/>
+<body class="bg-dark">
+    <div class="container">
+        <form action="" id="form-cari">
+            <div class="g-3 mb-3">
+                <label for="" class="form-label text-white">Find</label>
+                <input type="text" name="key" id="" class="form-control">
+            </div>
+        </form>
+        <div class="row g-3 align-items-center justify-content-center h-100" id="show-starwars">
+            
+        </div>
+    </div>
+
+    <script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.js' integrity='sha512-20FZL4lG1jTZXPeMkblgj4b/fsXASK5aW87Tm7Z5QK9QmmYleVGM0NlS9swfb6XT8yrFTAWkq3QfnMe7MKIX8A==' crossorigin='anonymous'></script>
+    <script>
+        let peoples = [];
+
+        function tampilData(peoples){
+            const showStarwars = document.getElementById("show-starwars");
+
+            showStarwars.innerHTML = "";
+            peoples.map(people => {
+                showStarwars.innerHTML += `
+                    <div class="col-md-3">
+                        <div class="card">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-truncate">Name : ${people.name}</li>
+                                <li class="list-group-item">Birth Year : ${people.birth_year}</li>
+                                <li class="list-group-item">Gender : ${people.gender}</li>
+                                <li class="list-group-item">Eye Color : ${people.eye_color}</li>
+                                <li class="list-group-item">Skin Color : ${people.skin_color}</li>
+                                <li class="list-group-item">Mass : ${people.mass}</li>
+                                <li class="list-group-item">Height : ${people.height}</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            })
+        }
+
+        const formCari = document.getElementById("form-cari");
+        formCari.addEventListener("input",function(event){
+            event.preventDefault();
+
+            const formData = new FormData(formCari);
+            const cari = formData.get("key");
+
+            const temp = [...peoples];
+
+            tampilData(temp.filter(temp => temp.name.toLowerCase().includes(cari)));
+        });
+
+
+        fetch("https://swapi.dev/api/people")
+            .then(response => response.json())
+            .then(data => {
+                peoples = data.results;
+                tampilData(peoples);
+            });
+    </script>
+</body>
+</html>
